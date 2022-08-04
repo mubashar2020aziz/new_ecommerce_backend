@@ -4,26 +4,19 @@ import express from 'express';
 const app = express();
 import bodyParser from 'body-parser';
 import connection from './config/db.mjs';
+import router from './routes/user.mjs';
 
+import User from './models/modeluser.mjs';
+// middleware
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const port = process.env.PORT;
+app.use('/', router);
 
 connection();
+User();
 
-app.get('/', (req, res) => {
-  res.status(200).json({
-    status: true,
-    message: 'yes',
-  });
-});
-
-app.post('/data', (req, res) => {
-  res.status(200).json({
-    status: true,
-    message: req.body,
-  });
-});
 app.listen(port, (req, res) => {
   console.log('running the server:' + port);
 });
