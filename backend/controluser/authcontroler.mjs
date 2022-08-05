@@ -1,10 +1,12 @@
 import User from '../models/modeluser.mjs';
 import bcrypt from 'bcrypt';
-
+// import { validationResult } from 'express-validator';
+// const error = validationResult(req);
+//     return res.status(400).json({ errors: error.array() });
 export const signup = async (req, res) => {
   try {
-    const { firstname, lastname, email, password, phone } = req.body;
-    if (!firstname || !lastname || !email || !password || !phone) {
+    const { firstname, lastname, email, password } = req.body;
+    if (!firstname || !lastname || !email || !password) {
       return res.status(402).json({
         status: false,
         message: 'plz fill the form',
@@ -24,7 +26,7 @@ export const signup = async (req, res) => {
       username: Math.random().toString(),
       email,
       password,
-      phone,
+      role: 'user',
     });
     const userRegister = await user.save();
     if (userRegister) {
@@ -54,10 +56,10 @@ export const signin = async (req, res) => {
       });
     }
 
-    const userlogin = await User.findOne({ email: email });
-    if (userlogin) {
-      const isMatch = await bcrypt.compare(password, userlogin.password);
-      token = await userlogin.generateAuthToken();
+    const user = await User.findOne({ email: email });
+    if (user && user.role === 'user') {
+      const isMatch = await bcrypt.compare(password, user.password);
+      token = await user.generateAuthToken();
       console.log(token);
       if (!isMatch) {
         return res.status(400).json({

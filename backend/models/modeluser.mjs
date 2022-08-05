@@ -19,10 +19,6 @@ const userSchema = new Schema(
     },
     userName: {
       type: String,
-      trim: true,
-      unique: true,
-      index: true,
-      lowercase: true,
     },
     email: {
       type: String,
@@ -68,7 +64,10 @@ userSchema.pre('save', async function (next) {
 //  jwt token
 userSchema.methods.generateAuthToken = async function () {
   try {
-    let token = jwt.sign({ _id: this._id }, process.env.SECRETKEY);
+    let token = jwt.sign(
+      { _id: this._id, role: this.role },
+      process.env.SECRETKEY
+    );
     this.tokens = this.tokens.concat({ token: token });
     await this.save();
     return token;
@@ -76,5 +75,5 @@ userSchema.methods.generateAuthToken = async function () {
     console.log(err);
   }
 };
-const User = mongoose.model('User5', userSchema);
+const User = mongoose.model('usermain5', userSchema);
 export default User;
