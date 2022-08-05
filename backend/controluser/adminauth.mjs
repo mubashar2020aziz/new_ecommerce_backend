@@ -3,8 +3,8 @@ import bcrypt from 'bcrypt';
 
 export const adminsignup = async (req, res) => {
   try {
-    const { firstname, lastname, email, password, phone } = req.body;
-    if (!firstname || !lastname || !email || !password || !phone) {
+    const { firstname, lastname, email, password } = req.body;
+    if (!firstname || !lastname || !email || !password) {
       return res.status(402).json({
         status: false,
         message: 'plz fill the form',
@@ -24,7 +24,7 @@ export const adminsignup = async (req, res) => {
       username: Math.random().toString(),
       email,
       password,
-      phone,
+
       role: 'admin',
     });
     const userRegister = await user.save();
@@ -55,20 +55,20 @@ export const adminsignin = async (req, res) => {
       });
     }
 
-    const userlogin = await User.findOne({ email: email });
-    if (userlogin) {
-      const isMatch = await bcrypt.compare(password, userlogin.password);
-      token = await userlogin.generateAuthToken();
+    const user = await User.findOne({ email: email });
+    if (user && user.role === 'admin') {
+      const isMatch = await bcrypt.compare(password, user.password);
+      token = await user.generateAuthToken();
       console.log(token);
       if (!isMatch) {
         return res.status(400).json({
           status: false,
-          message: 'user login not exist',
+          message: 'admin login not exist',
         });
       } else {
         return res.status(200).json({
           status: true,
-          message: 'user login successfull',
+          message: 'admin login successfull',
         });
       }
     } else {

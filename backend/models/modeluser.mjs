@@ -19,10 +19,6 @@ const userSchema = new Schema(
     },
     userName: {
       type: String,
-      trim: true,
-      unique: true,
-      index: true,
-      lowercase: true,
     },
     email: {
       type: String,
@@ -76,5 +72,5 @@ userSchema.methods.generateAuthToken = async function () {
     console.log(err);
   }
 };
-const User = mongoose.model('User5', userSchema);
+const User = mongoose.model('usermain5', userSchema);
 export default User;
