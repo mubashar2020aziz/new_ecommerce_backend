@@ -56,10 +56,10 @@ export const signin = async (req, res) => {
       });
     }
 
-    const userlogin = await User.findOne({ email: email });
-    if (userlogin) {
-      const isMatch = await bcrypt.compare(password, userlogin.password);
-      token = await userlogin.generateAuthToken();
+    const user = await User.findOne({ email: email });
+    if (user && user.role === 'user') {
+      const isMatch = await bcrypt.compare(password, user.password);
+      token = await user.generateAuthToken();
       console.log(token);
       if (!isMatch) {
         return res.status(400).json({

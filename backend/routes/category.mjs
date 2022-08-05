@@ -27,6 +27,10 @@ export const category = (req, res) => {
     name: req.body.name,
     slug: slugify(req.body.name),
   };
+  if (req.file) {
+    categoryObj.categoryImage =
+      process.env.APi + '/public/' + req.file.filename;
+  }
   if (req.body.parentId) {
     categoryObj.parentId = req.body.parentId;
   }

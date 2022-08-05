@@ -2,14 +2,18 @@ import express from 'express';
 const router = express.Router();
 import { signup } from '../controluser/authcontroler.mjs';
 import { signin } from '../controluser/authcontroler.mjs';
-import { adminMiddleware, requireSignin } from '../controluser/authcontrol.mjs';
+import {
+  adminMiddleware,
+  requireSignin,
+  userMiddleware,
+} from '../controluser/authcontrol.mjs';
 import { adminsignup } from '../controluser/adminauth.mjs';
 import { adminsignin } from '../controluser/adminauth.mjs';
 import { category, getCategories } from './category.mjs';
 import { product } from '../controluser/controlproduct.mjs';
 import multer from 'multer';
 import shortid from 'shortid';
-
+import { addItemToCart } from '../controluser/cartController.mjs';
 //  import  check  from 'express-validator';
 
 // multer space
@@ -32,7 +36,13 @@ router.post('/adminsignin', adminsignin);
 router.post('/signup', signup);
 
 router.post('/signin', signin);
-router.post('/category/create', requireSignin, adminMiddleware, category);
+router.post(
+  '/category/create',
+  requireSignin,
+  adminMiddleware,
+  upload.single('categoryimage'),
+  category
+);
 router.get('/category/getcategories', getCategories);
 router.post(
   '/product/create',
@@ -40,6 +50,13 @@ router.post(
   adminMiddleware,
   upload.array('productPicture'),
   product
+);
+
+router.post(
+  '/user/cart/addtocart',
+  requireSignin,
+  userMiddleware,
+  addItemToCart
 );
 
 router.post('/profile', requireSignin, (req, res) => {
