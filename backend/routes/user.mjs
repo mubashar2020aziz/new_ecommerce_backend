@@ -7,14 +7,17 @@ import {
   requireSignin,
   userMiddleware,
 } from '../controluser/authcontrol.mjs';
-import { adminsignup } from '../controluser/adminauth.mjs';
+import { adminsignout, adminsignup } from '../controluser/adminauth.mjs';
 import { adminsignin } from '../controluser/adminauth.mjs';
 import { category, getCategories } from './category.mjs';
 import { product } from '../controluser/controlproduct.mjs';
 import multer from 'multer';
 import shortid from 'shortid';
 import { addItemToCart } from '../controluser/cartController.mjs';
+import cookieParser from 'cookie-parser';
 //  import  check  from 'express-validator';
+
+router.use(cookieParser());
 
 // multer space
 const storage = multer.diskStorage({
@@ -32,6 +35,7 @@ const upload = multer({ storage });
 router.post('/adminsignup', adminsignup);
 
 router.post('/adminsignin', adminsignin);
+router.post('/adminsignout', requireSignin, adminsignout);
 
 router.post('/signup', signup);
 

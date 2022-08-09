@@ -62,14 +62,14 @@ userSchema.pre('save', async function (next) {
 });
 
 //  jwt token
-userSchema.methods.generateAuthToken = async function () {
+userSchema.methods.generateAuthToken = function () {
   try {
     let token = jwt.sign(
       { _id: this._id, role: this.role },
       process.env.SECRETKEY
     );
     this.tokens = this.tokens.concat({ token: token });
-    await this.save();
+    this.save();
     return token;
   } catch (err) {
     console.log(err);

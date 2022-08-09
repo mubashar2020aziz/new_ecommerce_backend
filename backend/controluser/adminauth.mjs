@@ -49,26 +49,37 @@ export const adminsignin = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.status(402).json({
+      return res.status(400).json({
         status: false,
         message: 'plz fill the form',
       });
     }
 
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email });
     if (user && user.role === 'admin') {
       const isMatch = await bcrypt.compare(password, user.password);
-      token = await user.generateAuthToken();
-      console.log(token);
+      // token = await user.generateAuthToken(user._id);
+      // console.log(token);
+      // res.status('token', token, {
+      //   expires: new Date(Date.now() + 258892000000),
+      // });
+      const { _id, firstName, lastName, email, role, fullName } = user;
+      res.cookie('token', token, { expireIn: '30d' });
       if (!isMatch) {
         return res.status(400).json({
           status: false,
-          message: 'admin login not exist',
+          message: 'admin login fail',
         });
       } else {
         return res.status(200).json({
-          status: true,
-          message: 'admin login successfull',
+          token: user.generateAuthToken(),
+          user: { _id, firstName, lastName, email, role, fullName },
+          // _id: user._id,
+
+          // email: user.email,
+          // role: user.admin,
+          // token: user.generateAuthToken(user._id),
+          // message: 'admin login successfully',
         });
       }
     } else {
@@ -80,4 +91,9 @@ export const adminsignin = async (req, res) => {
   } catch (err) {
     console.log(err);
   }
+};
+
+export const adminsignout = (req, res) => {
+  res.clearCookie('token');
+  res.status(200).json({ message: 'signout successfully' });
 };

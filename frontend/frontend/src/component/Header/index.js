@@ -1,11 +1,55 @@
 import React from 'react';
 import { Navbar, Container, Nav } from 'react-bootstrap';
 import { NavLink, Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { signout } from '../../redux/actions/authAction';
 const Header = (props) => {
+  const auth = useSelector((state) => state.auth);
+
+  const dispatch = useDispatch();
+  const logout = () => {
+    dispatch(signout());
+  };
+
+  const renderLoggedInLinks = () => {
+    return (
+      <Nav>
+        <li className="nav-item">
+          <span className="nav-link" onClick={logout}>
+            Signout
+          </span>
+        </li>
+      </Nav>
+    );
+  };
+
+  const renderNotLoggedInLinks = () => {
+    return (
+      <Nav>
+        <li className="nav-item">
+          <NavLink to="/signup" className="nav-link">
+            Signup
+          </NavLink>
+        </li>
+        <li className="nav-item">
+          <NavLink to="/signin" className="nav-link">
+            Signin
+          </NavLink>
+        </li>
+      </Nav>
+    );
+  };
+
   return (
     <>
-      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-        <Container>
+      <Navbar
+        collapseOnSelect
+        expand="lg"
+        bg="dark"
+        variant="dark"
+        style={{ zIndex: '1' }}
+      >
+        <Container fluid>
           <Link to="/" className="navbar-brand">
             Admin Dashboard
           </Link>
@@ -28,18 +72,9 @@ const Header = (props) => {
                 </NavDropdown.Item>
               </NavDropdown> */}
             </Nav>
-            <Nav>
-              <li className="nav-item">
-                <NavLink to="/signup" className="nav-link">
-                  Signup
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink to="/signin" className="nav-link">
-                  Signin
-                </NavLink>
-              </li>
-            </Nav>
+            {auth.authenticate
+              ? renderLoggedInLinks()
+              : renderNotLoggedInLinks()}
           </Navbar.Collapse>
         </Container>
       </Navbar>
