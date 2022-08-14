@@ -6,16 +6,17 @@ const router = express.Router();
 function createCategories(categories, parentId = null) {
   const categoryList = [];
   let category;
-  if (parentId === null) {
-    category = categories.filter((cat) => cat.parentId === undefined);
+  if (parentId == null) {
+    category = categories.filter((cat) => cat.parentId == undefined);
   } else {
-    category = categories.filter((cat) => cat.parentId === parentId);
+    category = categories.filter((cat) => cat.parentId == parentId);
   }
   for (let cate of category) {
     categoryList.push({
       _id: cate._id,
       name: cate.name,
       slug: cate.slug,
+      parentId: cate.parentId,
       children: createCategories(categories, cate._id),
     });
   }
@@ -47,7 +48,7 @@ export const getCategories = (req, res) => {
     if (categories) {
       const categoriesList = createCategories(categories);
 
-      return res.status(201).json({ categoriesList });
+      return res.status(200).json({ categoriesList });
     }
   });
 };

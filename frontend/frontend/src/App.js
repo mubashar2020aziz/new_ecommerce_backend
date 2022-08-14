@@ -7,6 +7,7 @@ import Signup from './container/Signup';
 import PrivateRoutes from './component/Hoc/PrivateRoutes';
 import Product from './container/Home/Product';
 import Orders from './container/Home/Orders';
+import Category from './container/Home/Category';
 
 function App(props) {
   return (
@@ -15,6 +16,7 @@ function App(props) {
         <Routes>
           <Route element={<PrivateRoutes />}>
             <Route exact path="/" element={<Home />} />
+            <Route path="category" element={<Category />} />
             <Route path="products" element={<Product />} />
             <Route path="orders" element={<Orders />} />
           </Route>

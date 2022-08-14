@@ -11,6 +11,7 @@ import User from './models/modeluser.mjs';
 // middleware
 app.use(express.json());
 app.use('/public', express.static('upload'));
+//  app.use("/public", express.static(path.join(__dirname, "uploads")));
 
 const port = process.env.PORT;
 app.use(cors());

@@ -35,7 +35,7 @@ const upload = multer({ storage });
 router.post('/adminsignup', adminsignup);
 
 router.post('/adminsignin', adminsignin);
-router.post('/adminsignout', requireSignin, adminsignout);
+router.post('/adminsignout', adminsignout);
 
 router.post('/signup', signup);
 
@@ -44,7 +44,7 @@ router.post(
   '/category/create',
   requireSignin,
   adminMiddleware,
-  upload.single('categoryimage'),
+  upload.array('categoryImage'),
   category
 );
 router.get('/category/getcategories', getCategories);
